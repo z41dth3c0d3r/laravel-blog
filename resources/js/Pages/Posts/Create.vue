@@ -31,7 +31,13 @@ const form = useForm({
                     class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900 dark:text-gray-100">
-                        <form>
+                        <form
+                            @submit.prevent="
+                                form.post(route('posts.store'), {
+                                    onSuccess: () => form.reset(),
+                                })
+                            "
+                        >
                             <div>
                                 <InputLabel for="title" value="Title" />
 
@@ -62,7 +68,9 @@ const form = useForm({
                             </div>
                             <div class="mt-4">
                                 <div class="flex justify-end">
-                                    <PrimaryButton>Create</PrimaryButton>
+                                    <PrimaryButton :disabled="form.processing"
+                                        >Create</PrimaryButton
+                                    >
                                 </div>
                             </div>
                         </form>

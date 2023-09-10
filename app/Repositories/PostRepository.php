@@ -16,11 +16,33 @@ class PostRepository implements PostRepositoryInterface
     }
     public function getAllPosts(): Collection
     {
-        return $this->post::with('user')->all();
+        return $this->post::with('user')->latest()->get();
     }
 
     public function createPost(array $postDetails): Post
     {
         return $this->post->create($postDetails);
+    }
+
+    function getPostById($postId): Post
+    {
+        return Post::with('user')->find($postId);
+    }
+
+    function getPostsByUserId($userId): Collection
+    {
+        return User::with(['posts' => function ($query) {
+            return $query->latest();
+        }])->find($userId)->posts;
+    }
+
+    function deletePost($postId): void
+    {
+        Post::destroy($postId);
+    }
+
+    function updatePost($postId, array $newDetails): void
+    {
+        Post::whereId($postId)->update($newDetails);
     }
 }
